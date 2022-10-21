@@ -11,8 +11,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.wol.databinding.ActivityMainBinding;
 
-import static com.example.wol.Util.*;
-
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements AddDeviceDialogue.AddDeviceDialogueListener {
@@ -44,7 +42,8 @@ public class MainActivity extends AppCompatActivity implements AddDeviceDialogue
     private void addDevice(String name, String mac) {
         Device device = new Device(name, mac);
         devices.add(device);
-        if(!IO.saveDevice(devices)){
+        if(!IO.saveDevice(this, devices)){
+            devices.remove(device);
             Snackbar.make(binding.getRoot(), "Failed to save device", Snackbar.LENGTH_SHORT).show();
             return;
         }
@@ -57,13 +56,12 @@ public class MainActivity extends AppCompatActivity implements AddDeviceDialogue
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        devices = IO.loadDevices();
+        devices = IO.loadDevices(this);
         RecyclerView recyclerView = binding.deviceList;
         recyclerView.setAdapter(new DeviceAdapter(devices));
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        Network.sendGetRequest(DEFAULT_IP,DEFAULT_PORT,MAC,KEY,FORMAT);
-        Network.sendPostRequest(DEFAULT_IP,DEFAULT_PORT,MAC,KEY,FORMAT);
+        //Network.sendPostRequest(DEFAULT_IP,DEFAULT_PORT,MAC,KEY,FORMAT);
 
         binding.addNewDevice.setOnClickListener(view -> {
             openDialogNewDevice();

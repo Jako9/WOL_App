@@ -6,6 +6,7 @@
     app:cardCornerRadius="4dp">
 
     <RelativeLayout
+        android:id="@+id/device"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="4dp">
@@ -24,12 +25,20 @@
             android:id="@+id/deviceMac"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/deviceName"
             android:text="Small"
-            android:textSize="15sp"
-            android:layout_below="@+id/deviceName">
+            android:textSize="15sp">
 
         </TextView>
-        
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/deviceEdit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:clickable="true"
+            app:srcCompat="@android:drawable/ic_menu_edit" />
+
     </RelativeLayout>
 
 </androidx.cardview.widget.CardView>

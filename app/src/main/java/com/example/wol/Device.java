@@ -13,8 +13,8 @@ public class Device implements Serializable {
     public Device(String name, String mac) {
         this.name = name;
         this.mac = mac;
-        this.ip = Util.DEFAULT_IP;
-        this.port = Util.DEFAULT_PORT;
+        this.ip = "";
+        this.port = 0;
     }
 
     public String getName() {
@@ -31,5 +31,21 @@ public class Device implements Serializable {
 
     public void setMac(String mac) {
         this.mac = mac;
+    }
+
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
+
+    public int getPort() {
+        return port;
+    }
+
+    public void setPort(int port) {
+        this.port = port;
     }
 }
