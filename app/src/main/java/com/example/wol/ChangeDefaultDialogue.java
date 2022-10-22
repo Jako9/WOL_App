@@ -12,10 +12,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
-public class AddDeviceDialogue extends AppCompatDialogFragment {
+public class ChangeDefaultDialogue extends AppCompatDialogFragment {
 
-    private EditText editName;
-    private EditText editMac;
+    private EditText editIP;
+    private EditText editPort;
+    private EditText editKey;
     private AddDeviceDialogueListener listener;
 
     @NonNull
@@ -24,20 +25,31 @@ public class AddDeviceDialogue extends AppCompatDialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        View view = inflater.inflate(R.layout.add_device_dialogue,null);
+        View view = inflater.inflate(R.layout.edit_default_dialogue,null);
 
         builder.setView(view)
-                .setTitle("Add device")
+                .setTitle("Change Deafults")
                 .setNegativeButton("Cancel", (dialog, which) -> {
                 })
                 .setPositiveButton("ok",(dialog, which) -> {
-                    String nameDevice = editName.getText().toString();
-                    String macAddress = editMac.getText().toString();
-                    listener.applyTexts(nameDevice,macAddress);
+                    String newIP = editIP.getText().toString();
+                    int newPort = -1;
+                    try {
+                        newPort = Integer.parseInt(editPort.getText().toString());
+                    } catch (NumberFormatException e) {
+                    }
+                    String newKey = editKey.getText().toString();
+                    listener.applyUpdates(newIP,newPort,newKey);
                 });
 
-        editName = view.findViewById(R.id.editName);
-        editMac = view.findViewById(R.id.editMac);
+        editIP = view.findViewById(R.id.default_ip);
+        editPort = view.findViewById(R.id.default_port);
+        editKey = view.findViewById(R.id.default_key);
+
+        //Change content of edit boxes to current default values
+        editIP.setText(Util.DEFAULT_IP());
+        editPort.setText(Util.DEFAULT_PORT() + "");
+        editKey.setText(Util.DEFAULT_KEY());
         return builder.create();
     }
 
@@ -52,7 +64,7 @@ public class AddDeviceDialogue extends AppCompatDialogFragment {
     }
 
     public interface AddDeviceDialogueListener {
-        void applyTexts(String name, String mac);
+        void applyUpdates(String ip, int port, String key);
     }
 
 }

@@ -1,5 +1,7 @@
 package com.example.wol;
 
+import static com.example.wol.Util.*;
+
 import android.util.Log;
 
 import java.io.IOException;
@@ -8,13 +10,17 @@ import okhttp3.*;
 public class Network {
     private static final OkHttpClient client = new OkHttpClient();
 
-    public static void sendGetRequest(String ip, int port,String mac, String key, String format) {
-        Request request = buildRequest(RequestType.GET,ip,port,mac,key,format);
-        processGetRequest(request);
+    public static void sendGetRequest(Device device, CallbackStatus callback) {
+        String ip = device.getIp().equals("") ? DEFAULT_IP() : device.getIp();
+        int port = device.getPort() == 0 ? DEFAULT_PORT() : device.getPort();
+        Request request = buildRequest(RequestType.GET,ip,port,device.getMac(),DEFAULT_KEY(),DEFAULT_FORMAT());
+        processGetRequest(request, callback);
     }
 
-    public static void sendPostRequest(String ip, int port,String mac, String key, String format) {
-        Request request = buildRequest(RequestType.POST,ip,port,mac,key,format);
+    public static void sendPostRequest(Device device) {
+        String ip = device.getIp().equals("") ? DEFAULT_IP() : device.getIp();
+        int port = device.getPort() == 0 ? DEFAULT_PORT() : device.getPort();
+        Request request = buildRequest(RequestType.POST,ip,port,device.getMac(),DEFAULT_KEY(),DEFAULT_FORMAT());
         processPostRequest(request);
     }
 
@@ -29,25 +35,27 @@ public class Network {
             public void onResponse(Call call, okhttp3.Response response) throws IOException {
                 if (response.isSuccessful()) {
                     final String myResponse = response.body().string();
-                    Log.d("Response", myResponse);
+                    System.out.println("Response: " + myResponse);
                 }
             }
         });
     }
 
-    private static void processGetRequest(Request request) {
+    private static void processGetRequest(Request request, CallbackStatus callback) {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                e.printStackTrace();
+                callback.onFailure(e.getMessage());
             }
 
             @Override
             public void onResponse(Call call, okhttp3.Response response) throws IOException {
                 if (response.isSuccessful()) {
                     final String myResponse = response.body().string();
-                    Log.d("Response", myResponse);
+                    callback.onSuccess(myResponse);
+                    return;
                 }
+                callback.onFailure("No successful response");
             }
         });
     }

@@ -12,6 +12,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class IO {
     public static boolean saveDevice(Context context, ArrayList<Device> devices) {
@@ -39,6 +40,24 @@ public class IO {
             e.printStackTrace();
         }
         return devices;
+    }
+
+    public static void saveDefault(MainActivity mainActivity, String ip, int port, String key) {
+        SharedPreferences sharedPreferences = mainActivity.getSharedPreferences("shared preferences", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("ip", ip);
+        editor.putInt("port", port);
+        editor.putString("key", key);
+        editor.apply();
+    }
+
+    public static HashMap<String, String> loadDefaults(MainActivity mainActivity) {
+        SharedPreferences sharedPreferences = mainActivity.getSharedPreferences("shared preferences", Context.MODE_PRIVATE);
+        HashMap<String, String> defaults = new HashMap<>();
+        defaults.put("ip", sharedPreferences.getString("ip", ""));
+        defaults.put("port", String.valueOf(sharedPreferences.getInt("port", 0)));
+        defaults.put("key", sharedPreferences.getString("key", ""));
+        return defaults;
     }
 
 
