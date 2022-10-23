@@ -1,24 +1,123 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:visibility="visible">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dip"
+        android:gravity="center"
+        android:text="Name of Device"
+        android:textColor="#000000" />
+    />
 
     <EditText
         android:id="@+id/editName"
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="5dip"
         android:hint="Name"
-        android:inputType="textPersonName"
-        android:singleLine="true" />
+        android:inputType="textPersonName" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dip"
+        android:gravity="center"
+        android:text="MAC-Address"
+        android:textColor="#000000" />
+    />
 
     <EditText
         android:id="@+id/editMac"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/editName"
+        android:layout_marginTop="5dip"
+        android:hint="C5:10:C4:4A:97:D2"
+        android:inputType="textUri" />
+
+    <ImageView
+        android:id="@+id/expandAddDevice"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="C5:10:C4:4A:97:D2"
-        android:inputType="textUri"
-        android:layout_below="@+id/editName"
-        android:singleLine="true" />
+        android:layout_marginTop="15dp"
+        android:visibility="visible"
+        app:srcCompat="@drawable/ic_expand" />
 
-</RelativeLayout>
+    <TextView
+        android:id="@+id/customIPText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dip"
+        android:gravity="center"
+        android:text="Custom IP"
+        android:textColor="#000000"
+        android:visibility="gone" />
+    />
+
+    <EditText
+        android:id="@+id/customIP"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dip"
+        android:hint="http://example.com/api"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/customPortText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dip"
+        android:gravity="center"
+        android:text="Custom Port"
+        android:textColor="#000000"
+        android:visibility="gone" />
+    />
+
+    <EditText
+        android:id="@+id/customPort"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/customIP"
+        android:layout_marginTop="5dip"
+        android:hint="3000"
+        android:inputType="number"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/customKeyText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dip"
+        android:gravity="center"
+        android:text="Custom Key"
+        android:textColor="#000000"
+        android:visibility="gone" />
+    />
+
+    <EditText
+        android:id="@+id/customKey"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/customPort"
+        android:layout_marginTop="5dip"
+        android:inputType="textPassword"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/collapseAddDevice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dip"
+        android:visibility="gone"
+        app:srcCompat="@drawable/ic_collapse" />
+
+
+</LinearLayout>
+

@@ -31,7 +31,12 @@ public class IO {
         ArrayList<Device> devices = new ArrayList<>();
         try{
             SharedPreferences sharedPreferences = context.getSharedPreferences("shared preferences", Context.MODE_PRIVATE);
-            devices = (ArrayList<Device>) ObjectSerializer.deserialize(sharedPreferences.getString("devices", ObjectSerializer.serialize(new ArrayList<Device>())));
+            Object o = ObjectSerializer.deserialize(sharedPreferences.getString("devices", ObjectSerializer.serialize(new ArrayList<Device>())));
+            if(o == null){
+                return devices;
+            }
+            devices = (ArrayList<Device>) o;
+
         }
         catch(InvalidClassException e){
             e.printStackTrace();
@@ -82,7 +87,7 @@ public class IO {
                     ObjectInputStream objStream = new ObjectInputStream(serialObj);
                     return objStream.readObject();
                 } catch (Exception e) {
-                    throw new RuntimeException(e);
+                    return null;
                 }
             }
 

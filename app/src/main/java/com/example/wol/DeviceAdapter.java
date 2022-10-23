@@ -1,5 +1,7 @@
 package com.example.wol;
 
+import android.app.Activity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -7,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -19,6 +22,7 @@ import java.util.HashMap;
 
 public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.DeviceViewHolder> {
     RecyclerView mRecyclerView;
+    FragmentManager mFragmentManager;
     @Override
     public DeviceViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.device, parent, false);
@@ -33,11 +37,25 @@ public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.DeviceView
         holder.mTextView1.setText(currentItem.getName());
         holder.mTextView2.setText(currentItem.getMac());
         holder.mEditButton.setOnClickListener(view ->  {
-            Snackbar.make(view, "Edit " + currentItem.getName(), Snackbar.LENGTH_SHORT).show();
+            AddDeviceDialogue addDeviceDialogue = new AddDeviceDialogue(currentItem, position);
+            addDeviceDialogue.show(mFragmentManager,"edit device dialog");
+        });
+        holder.mDeleteButton.setOnClickListener(view -> {
+            DeleteDeviceDialogue deleteDeviceDialogue = new DeleteDeviceDialogue(position);
+            deleteDeviceDialogue.show(mFragmentManager,"delete device dialog");
         });
         holder.mDevice.setOnClickListener(view ->  {
-            Network.sendPostRequest(currentItem);
-            Snackbar.make(view, "Wake " + currentItem.getName(), Snackbar.LENGTH_SHORT).show();
+            Network.sendPostRequest(currentItem, new CallbackStatus() {
+                @Override
+                public void onSuccess(String response) {
+                    Snackbar.make(mRecyclerView, response, Snackbar.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onFailure(String error) {
+                    Snackbar.make(mRecyclerView, error, Snackbar.LENGTH_SHORT).show();
+                }
+            });
         });
     }
 
@@ -47,26 +65,28 @@ public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.DeviceView
     }
 
     public void setStatus(Device device, Status status){
+        DeviceViewHolder holder;
         try {
-            DeviceViewHolder holder = (DeviceViewHolder) mRecyclerView.findViewHolderForAdapterPosition(mDeviceList.indexOf(device));
-            if (status == ONLINE) {
-                holder.mOnline.setVisibility(View.VISIBLE);
-                holder.mOffline.setVisibility(View.INVISIBLE);
-            } else {
-                holder.mOnline.setVisibility(View.INVISIBLE);
-                holder.mOffline.setVisibility(View.VISIBLE);
-            }
+            holder = (DeviceViewHolder) mRecyclerView.findViewHolderForAdapterPosition(mDeviceList.indexOf(device));
         }
         catch (Exception e){
-            e.printStackTrace();
+            Log.e("Error", "Device not found");
+            return;
         }
-
+        if (status == ONLINE) {
+            holder.mOnline.setVisibility(View.VISIBLE);
+            holder.mOffline.setVisibility(View.INVISIBLE);
+        } else {
+            holder.mOnline.setVisibility(View.INVISIBLE);
+            holder.mOffline.setVisibility(View.VISIBLE);
+        }
     }
 
     public static class DeviceViewHolder extends RecyclerView.ViewHolder {
         public TextView mTextView1;
         public TextView mTextView2;
-        public FloatingActionButton mEditButton;
+        public ImageView mEditButton;
+        public ImageView mDeleteButton;
         public RelativeLayout mDevice;
         public ImageView mOffline;
         public ImageView mOnline;
@@ -79,12 +99,14 @@ public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.DeviceView
             mDevice = itemView.findViewById(R.id.device);
             mOffline = itemView.findViewById(R.id.deviceOffline);
             mOnline = itemView.findViewById(R.id.deviceOnline);
+            mDeleteButton = itemView.findViewById(R.id.deviceDelete);
         }
     }
 
     private ArrayList<Device> mDeviceList;
 
-    public DeviceAdapter(ArrayList<Device> deviceList) {
+    public DeviceAdapter(ArrayList<Device> deviceList, FragmentManager fragmentManager) {
         mDeviceList = deviceList;
+        mFragmentManager = fragmentManager;
     }
 }

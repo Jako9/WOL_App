@@ -7,14 +7,16 @@ public class Device implements Serializable {
     private String name;
     private String mac;
     private String ip;
+    private String key;
     private int port;
 
 
-    public Device(String name, String mac) {
+    public Device(String name, String mac, String ip,int port, String key) {
         this.name = name;
         this.mac = mac;
-        this.ip = "";
-        this.port = 0;
+        this.ip = ip;
+        this.key = key;
+        this.port = port;
     }
 
     public String getName() {
@@ -47,5 +49,13 @@ public class Device implements Serializable {
 
     public void setPort(int port) {
         this.port = port;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 }
