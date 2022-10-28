@@ -51,7 +51,7 @@ public class DeleteDeviceDialogue extends AppCompatDialogFragment {
         try {
             listener = (DeleteDeviceDialogueListener) context;
         } catch (ClassCastException e) {
-            throw  new ClassCastException(context.toString() + "must implement DeleteDeviceDialogueListener");
+            throw  new ClassCastException(context + "must implement DeleteDeviceDialogueListener");
         }
     }
 

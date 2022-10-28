@@ -12,6 +12,7 @@ import android.app.Activity;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
 import com.google.android.material.snackbar.Snackbar;
 
@@ -150,6 +151,12 @@ public class MainActivity extends AppCompatActivity implements AddDeviceDialogue
     }
 
     private void refreshDeviceStatus() {
+        runOnUiThread(() -> {
+            //Display loading icon
+            binding.loading.setVisibility(android.view.View.VISIBLE);
+
+        });
+        Util.startHTTPCall(devices.toArray().length,this);
         for (Device device : devices) {
             Network.sendGetRequest(device, new CallbackStatus() {
 
@@ -163,6 +170,7 @@ public class MainActivity extends AppCompatActivity implements AddDeviceDialogue
                             currentDeviceAdapter.setStatus(device, OFFLINE);
                         });
                     }
+                    Util.endHTTPCall();
                     Log.d("Update","Updated status of " + device.getName() + " to " + response);
                 }
 
@@ -172,9 +180,16 @@ public class MainActivity extends AppCompatActivity implements AddDeviceDialogue
                     runOnUiThread(() -> {
                         currentDeviceAdapter.setStatus(device, OFFLINE);
                     });
+                    Util.endHTTPCall();
                 }
             });
         }
+    }
+
+    public void disableLoading(){
+        runOnUiThread(() -> {
+            binding.loading.setVisibility(View.INVISIBLE);
+        });
     }
 
     @Override
